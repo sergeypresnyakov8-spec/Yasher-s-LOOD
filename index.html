@@ -3,43 +3,72 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Yasher System | Dashboard</title>ф
+    <title>Yasher System | Dashboard</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
         body { 
             font-family: 'Montserrat', sans-serif; 
-            background-color: #f8fafc; 
-            background-image: url("data:image/svg+xml,%3Csvg width='30' height='30' viewBox='0 0 30 30' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 0h30L15 15zm15 15L30 30H0z' fill='%2316a34a' fill-opacity='0.02' fill-rule='evenodd'/%3E%3C/svg%3E");
+            background-color: #0f172a; 
+            color: #f8fafc;
+            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%2322c55e' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
         }
-        .yasher-card { background: white; border-radius: 24px; border: 1px solid #e2e8f0; box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.05); }
-        .yasher-btn { background: #16a34a; transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); }
-        .yasher-btn:hover { background: #15803d; transform: translateY(-1px); box-shadow: 0 10px 15px -3px rgba(22, 163, 74, 0.2); }
+        .yasher-card { 
+            background: rgba(30, 41, 59, 0.7); 
+            backdrop-filter: blur(16px);
+            border-radius: 20px; 
+            border: 1px solid rgba(34, 197, 94, 0.15); 
+            box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.5), inset 0 0 20px rgba(34, 197, 94, 0.02); 
+        }
+        .yasher-btn { 
+            background: linear-gradient(135deg, #16a34a, #22c55e); 
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); 
+            box-shadow: 0 4px 15px -3px rgba(34, 197, 94, 0.3);
+        }
+        .yasher-btn:hover { 
+            background: linear-gradient(135deg, #15803d, #16a34a); 
+            transform: translateY(-2px) scale(1.02); 
+            box-shadow: 0 10px 25px -3px rgba(34, 197, 94, 0.5); 
+        }
         
         .btn-res { 
             transition: all 0.2s; 
-            padding: 10px 16px; 
-            border-radius: 12px; 
+            padding: 8px 10px; 
+            border-radius: 10px; 
             font-weight: 900; 
-            font-size: 11px; 
+            font-size: 10px; 
             color: white;
             text-transform: uppercase;
             cursor: pointer;
+            letter-spacing: 0.05em;
         }
-        .btn-res:hover { transform: scale(1.05); filter: brightness(1.1); }
+        @media (min-width: 640px) {
+            .btn-res { padding: 10px 16px; font-size: 11px; }
+        }
+        .btn-res:hover { transform: scale(1.05); filter: brightness(1.2); }
         .btn-res:active { transform: scale(0.95); }
 
-        #loadingOverlay { display: none; position: fixed; inset: 0; background: rgba(255,255,255,0.85); z-index: 100; backdrop-filter: blur(6px); }
+        #loadingOverlay { display: none; position: fixed; inset: 0; background: rgba(15, 23, 42, 0.9); z-index: 100; backdrop-filter: blur(8px); }
         input::-webkit-outer-spin-button, input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
         
+        input {
+            background: rgba(15, 23, 42, 0.6) !important;
+            color: #f8fafc !important;
+            border-color: rgba(51, 65, 85, 0.8) !important;
+        }
+        input:focus {
+            border-color: #22c55e !important;
+            box-shadow: 0 0 0 2px rgba(34, 197, 94, 0.2) !important;
+        }
+
         .fade-in { animation: fadeIn 0.4s ease-out; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
 
         /* Custom Scrollbar for history */
-        .custom-scroll::-webkit-scrollbar { width: 6px; }
-        .custom-scroll::-webkit-scrollbar-track { background: #f1f5f9; border-radius: 10px; }
-        .custom-scroll::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
-        .custom-scroll::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+        .custom-scroll::-webkit-scrollbar { width: 4px; }
+        .custom-scroll::-webkit-scrollbar-track { background: rgba(15, 23, 42, 0.5); border-radius: 10px; }
+        .custom-scroll::-webkit-scrollbar-thumb { background: #22c55e; border-radius: 10px; }
+        .custom-scroll::-webkit-scrollbar-thumb:hover { background: #16a34a; }
     </style>
 </head>
 <body class="p-4 md:p-8 lg:p-12 min-h-screen">
@@ -58,20 +87,20 @@
                 <div class="flex items-center gap-4">
                     <div class="w-14 h-14 bg-green-600 rounded-2xl flex items-center justify-center text-white text-3xl font-black shadow-lg shrink-0">Y</div>
                     <div>
-                        <h1 class="text-3xl font-black text-slate-800 tracking-tight">YASHER <span class="text-green-600">SYSTEM</span></h1>
-                        <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Dashboard</p>
+                        <h1 class="text-3xl font-black text-white tracking-tight drop-shadow-[0_0_10px_rgba(34,197,94,0.3)]">YASHER <span class="text-green-500">SYSTEM</span></h1>
+                        <p class="text-[10px] font-bold text-green-500/70 uppercase tracking-widest">Dashboard</p>
                     </div>
                 </div>
             </div>
             
             <div class="flex gap-3 sm:gap-4 w-full md:w-auto items-center">
-                <div class="yasher-card flex-1 md:flex-none px-4 sm:px-8 py-4 text-center min-w-[140px] sm:min-w-[160px]">
-                    <p class="text-[10px] font-bold text-slate-400 uppercase mb-1">Доступно (Bank)</p>
-                    <p id="currentBalance" class="text-xl sm:text-2xl font-black text-slate-800">0 ₽</p>
+                <div class="yasher-card flex-1 md:flex-none px-3 sm:px-8 py-3 sm:py-4 text-center min-w-[120px] sm:min-w-[160px]">
+                    <p class="text-[9px] sm:text-[10px] font-bold text-slate-400 uppercase mb-1">Доступно (Bank)</p>
+                    <p id="currentBalance" class="text-lg sm:text-2xl font-black text-white drop-shadow-[0_0_8px_rgba(255,255,255,0.2)]">0 ₽</p>
                 </div>
-                <div class="yasher-card flex-1 md:flex-none px-4 sm:px-8 py-4 text-center border-green-100 bg-green-50 min-w-[100px] sm:min-w-[120px]">
-                    <p class="text-[10px] font-bold text-green-600 uppercase mb-1">ROI %</p>
-                    <p id="currentROI" class="text-xl sm:text-2xl font-black text-green-700">0%</p>
+                <div class="yasher-card flex-1 md:flex-none px-3 sm:px-8 py-3 sm:py-4 text-center border-green-500/30 bg-green-500/10 min-w-[90px] sm:min-w-[120px]">
+                    <p class="text-[9px] sm:text-[10px] font-bold text-green-400 uppercase mb-1">ROI %</p>
+                    <p id="currentROI" class="text-lg sm:text-2xl font-black text-green-400 drop-shadow-[0_0_8px_rgba(34,197,94,0.4)]">0%</p>
                 </div>
             </div>
         </header>
@@ -79,8 +108,8 @@
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
             <!-- Form Side -->
             <div class="lg:col-span-4">
-                <div class="yasher-card p-5 sm:p-8 sticky top-8">
-                    <h2 class="text-xs font-black text-slate-400 uppercase tracking-widest mb-6 border-b pb-2">Новая ставка</h2>
+                <div class="yasher-card p-4 sm:p-8 sticky top-8">
+                    <h2 class="text-xs font-black text-green-500/80 uppercase tracking-widest mb-4 sm:mb-6 border-b border-slate-700/50 pb-2">Новая ставка</h2>
                     <form id="betForm" class="space-y-4">
                         <div>
                             <label class="block text-[10px] font-bold text-slate-500 uppercase mb-2 ml-1">Матч</label>
@@ -112,13 +141,13 @@
 
             <!-- List Side -->
             <div class="lg:col-span-8">
-                <div class="yasher-card p-5 sm:p-8 min-h-[500px] flex flex-col">
-                    <div class="flex justify-between items-center mb-6 border-b border-slate-100 pb-4">
-                        <div class="flex gap-6">
-                            <button onclick="setTab('active')" id="tab-active" class="text-xs sm:text-sm font-black uppercase tracking-widest text-green-600 border-b-2 border-green-600 pb-1 transition-all">Активные</button>
-                            <button onclick="setTab('history')" id="tab-history" class="text-xs sm:text-sm font-black uppercase tracking-widest text-slate-400 hover:text-slate-600 pb-1 transition-all border-b-2 border-transparent">История</button>
+                <div class="yasher-card p-4 sm:p-8 min-h-[500px] flex flex-col">
+                    <div class="flex justify-between items-center mb-4 sm:mb-6 border-b border-slate-700/50 pb-4">
+                        <div class="flex gap-4 sm:gap-6">
+                            <button onclick="setTab('active')" id="tab-active" class="text-xs sm:text-sm font-black uppercase tracking-widest text-green-500 border-b-2 border-green-500 pb-1 transition-all drop-shadow-[0_0_5px_rgba(34,197,94,0.5)]">Активные</button>
+                            <button onclick="setTab('history')" id="tab-history" class="text-xs sm:text-sm font-black uppercase tracking-widest text-slate-500 hover:text-slate-300 pb-1 transition-all border-b-2 border-transparent">История</button>
                         </div>
-                        <button onclick="refreshData()" class="p-2 text-slate-400 hover:text-green-600 transition-all bg-slate-50 rounded-lg">
+                        <button onclick="refreshData()" class="p-2 text-slate-400 hover:text-green-400 transition-all bg-slate-800/50 rounded-lg border border-slate-700/50 hover:border-green-500/50">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" /></svg>
                         </button>
                     </div>
@@ -137,6 +166,7 @@
         
         let allBets = [];
         let currentTab = 'active'; // 'active' или 'history'
+        let currentBalanceNum = 0; // Храним баланс как число для быстрых расчетов
 
         // Базовые события, которые всегда будут в списке
         const defaultEvents = ["П1", "П2", "Х", "Тотал Б 1.5", "Тотал Б 2.5", "Тотал М 2.5", "ОЗ - Да", "ОЗ - Нет"];
@@ -153,13 +183,11 @@
 
         function setTab(tab) {
             currentTab = tab;
-            document.getElementById('tab-active').className = tab === 'active' 
-                ? "text-xs sm:text-sm font-black uppercase tracking-widest text-green-600 border-b-2 border-green-600 pb-1 transition-all" 
-                : "text-xs sm:text-sm font-black uppercase tracking-widest text-slate-400 hover:text-slate-600 pb-1 transition-all border-b-2 border-transparent";
+            const activeClass = "text-xs sm:text-sm font-black uppercase tracking-widest text-green-500 border-b-2 border-green-500 pb-1 transition-all drop-shadow-[0_0_5px_rgba(34,197,94,0.5)]";
+            const inactiveClass = "text-xs sm:text-sm font-black uppercase tracking-widest text-slate-500 hover:text-slate-300 pb-1 transition-all border-b-2 border-transparent";
             
-            document.getElementById('tab-history').className = tab === 'history' 
-                ? "text-xs sm:text-sm font-black uppercase tracking-widest text-green-600 border-b-2 border-green-600 pb-1 transition-all" 
-                : "text-xs sm:text-sm font-black uppercase tracking-widest text-slate-400 hover:text-slate-600 pb-1 transition-all border-b-2 border-transparent";
+            document.getElementById('tab-active').className = tab === 'active' ? activeClass : inactiveClass;
+            document.getElementById('tab-history').className = tab === 'history' ? activeClass : inactiveClass;
             
             renderBets();
         }
@@ -180,8 +208,8 @@
             return dateStr;
         }
 
-        async function refreshData() {
-            toggleLoading(true);
+        async function refreshData(showLoader = true) {
+            if (showLoader) toggleLoading(true);
             try {
                 const response = await fetch(WEB_APP_URL);
                 if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
@@ -189,7 +217,8 @@
                 try {
                     const data = JSON.parse(text); // Пробуем парсить JSON
                     
-                    document.getElementById('currentBalance').innerText = data.balance.toLocaleString('ru-RU') + ' ₽';
+                    currentBalanceNum = data.balance;
+                    document.getElementById('currentBalance').innerText = currentBalanceNum.toLocaleString('ru-RU') + ' ₽';
                     document.getElementById('currentROI').innerText = data.roi;
 
                     const amountInput = document.getElementById('amount');
@@ -201,27 +230,52 @@
                     renderBets();
                 } catch (parseError) {
                     console.error("Ошибка парсинга JSON:", text);
-                    alert("Ошибка: Скрипт вернул неверный формат данных. Возможно, скрипт требует авторизации или произошла ошибка в коде Apps Script. Проверьте консоль.");
+                    if (showLoader) alert("Ошибка: Скрипт вернул неверный формат данных. Возможно, скрипт требует авторизации или произошла ошибка в коде Apps Script. Проверьте консоль.");
                 }
             } catch (e) {
                 console.error("Ошибка сети", e);
-                alert("Ошибка подключения к таблице: " + e.message + "\n\nУбедитесь, что при развертывании скрипта выбран доступ 'Все' (Anyone).");
+                if (showLoader) alert("Ошибка подключения к таблице: " + e.message + "\n\nУбедитесь, что при развертывании скрипта выбран доступ 'Все' (Anyone).");
             } finally {
-                toggleLoading(false);
+                if (showLoader) toggleLoading(false);
             }
         }
 
         async function updateStatus(row, status) {
-            toggleLoading(true);
+            // ОПТИМИСТИЧНОЕ ОБНОВЛЕНИЕ (Мгновенно меняем интерфейс)
+            const betIndex = allBets.findIndex(b => b.row === row);
+            if (betIndex !== -1) {
+                const bet = allBets[betIndex];
+                bet.result = status;
+                
+                // Считаем профит локально
+                if (status === 'Выигрыш') {
+                    bet.profit = (bet.amount * bet.odds) - bet.amount;
+                    currentBalanceNum += (bet.profit + bet.amount); // Возвращаем ставку + профит
+                } else if (status === 'Проигрыш') {
+                    bet.profit = -bet.amount;
+                    // Баланс не меняется, так как ставка уже была вычтена при создании
+                } else if (status === 'Возврат') {
+                    bet.profit = 0;
+                    currentBalanceNum += bet.amount; // Возвращаем ставку
+                }
+                
+                // Мгновенно обновляем баланс и список
+                document.getElementById('currentBalance').innerText = currentBalanceNum.toLocaleString('ru-RU') + ' ₽';
+                renderBets();
+            }
+
+            // Отправляем запрос в фоне (без экрана загрузки)
             try {
-                await fetch(WEB_APP_URL, {
+                fetch(WEB_APP_URL, {
                     method: 'POST',
                     mode: 'no-cors',
                     body: JSON.stringify({ action: 'update', row: row, status: status })
+                }).then(() => {
+                    // Тихо синхронизируем данные с таблицей через 2 секунды
+                    setTimeout(() => refreshData(false), 2000);
                 });
-                setTimeout(refreshData, 1500);
             } catch (err) {
-                toggleLoading(false);
+                console.error("Ошибка фонового обновления", err);
             }
         }
 
@@ -247,25 +301,25 @@
                 let profitText = '';
                 if (isHistory) {
                     if (item.result === 'Выигрыш') {
-                        resultBadge = `<span class="bg-green-100 text-green-700 px-3 py-1 rounded-lg text-[10px] font-black uppercase">ВЫИГРЫШ</span>`;
-                        profitText = `<span class="text-green-600 font-black">+${item.profit} ₽</span>`;
+                        resultBadge = `<span class="bg-green-500/20 border border-green-500/30 text-green-400 px-3 py-1 rounded-lg text-[10px] font-black uppercase shadow-[0_0_10px_rgba(34,197,94,0.2)]">ВЫИГРЫШ</span>`;
+                        profitText = `<span class="text-green-400 font-black drop-shadow-[0_0_5px_rgba(34,197,94,0.4)]">+${item.profit} ₽</span>`;
                     } else if (item.result === 'Проигрыш') {
-                        resultBadge = `<span class="bg-red-100 text-red-700 px-3 py-1 rounded-lg text-[10px] font-black uppercase">ПРОИГРЫШ</span>`;
-                        profitText = `<span class="text-red-500 font-black">${item.profit} ₽</span>`;
+                        resultBadge = `<span class="bg-red-500/20 border border-red-500/30 text-red-400 px-3 py-1 rounded-lg text-[10px] font-black uppercase">ПРОИГРЫШ</span>`;
+                        profitText = `<span class="text-red-400 font-black">${item.profit} ₽</span>`;
                     } else {
-                        resultBadge = `<span class="bg-slate-200 text-slate-600 px-3 py-1 rounded-lg text-[10px] font-black uppercase">ВОЗВРАТ</span>`;
-                        profitText = `<span class="text-slate-500 font-black">0 ₽</span>`;
+                        resultBadge = `<span class="bg-slate-700/50 border border-slate-600/50 text-slate-400 px-3 py-1 rounded-lg text-[10px] font-black uppercase">ВОЗВРАТ</span>`;
+                        profitText = `<span class="text-slate-400 font-black">0 ₽</span>`;
                     }
                 }
 
                 return `
-                <div class="flex flex-col sm:flex-row sm:items-center justify-between p-4 sm:p-5 border ${isHistory ? 'border-slate-100 bg-slate-50/50' : 'border-yellow-100 bg-yellow-50/40'} rounded-2xl fade-in gap-4">
-                    <div class="flex items-center gap-4">
-                        <div class="w-1.5 h-12 ${isHistory ? (item.result === 'Выигрыш' ? 'bg-green-400' : item.result === 'Проигрыш' ? 'bg-red-400' : 'bg-slate-300') : 'bg-yellow-400'} rounded-full shrink-0"></div>
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between p-3 sm:p-5 border ${isHistory ? 'border-slate-700/50 bg-slate-800/30' : 'border-green-500/30 bg-green-900/10'} rounded-2xl fade-in gap-3 sm:gap-4">
+                    <div class="flex items-center gap-3 sm:gap-4">
+                        <div class="w-1.5 h-10 sm:h-12 ${isHistory ? (item.result === 'Выигрыш' ? 'bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.6)]' : item.result === 'Проигрыш' ? 'bg-red-500' : 'bg-slate-500') : 'bg-green-400 shadow-[0_0_8px_rgba(74,222,128,0.6)]'} rounded-full shrink-0"></div>
                         <div class="min-w-0">
-                            <p class="font-black text-slate-700 text-sm tracking-tight break-words">${item.match || item.event}</p>
-                            <p class="text-[11px] font-bold text-slate-500 mt-0.5">${item.event}</p>
-                            <p class="text-[10px] font-bold text-slate-400 uppercase tracking-tighter truncate mt-1">${formatDate(item.date)} • КФ ${item.odds}</p>
+                            <p class="font-black text-slate-200 text-sm tracking-tight break-words">${item.match || item.event}</p>
+                            <p class="text-[11px] font-bold text-slate-400 mt-0.5">${item.event}</p>
+                            <p class="text-[10px] font-bold text-slate-500 uppercase tracking-tighter truncate mt-1">${formatDate(item.date)} • КФ <span class="text-green-400">${item.odds}</span></p>
                         </div>
                     </div>
                     <div class="flex flex-col items-start sm:items-end gap-3 w-full sm:w-auto">
@@ -281,8 +335,8 @@
                             <div class="mt-1 text-sm">${profitText}</div>
                         </div>
                         `}
-                        <p class="text-[10px] font-black text-slate-400 uppercase self-end">
-                            Ставка: ${item.amount} ₽
+                        <p class="text-[10px] font-black text-slate-500 uppercase self-end">
+                            Ставка: <span class="text-slate-300">${item.amount} ₽</span>
                         </p>
                     </div>
                 </div>
@@ -295,24 +349,53 @@
 
         document.getElementById('betForm').onsubmit = async function(e) {
             e.preventDefault();
-            toggleLoading(true);
-                const oddsValue = document.getElementById('odds').value.replace(',', '.');
-                const betData = {
-                    action: 'add',
-                    match: document.getElementById('match').value,
-                    event: document.getElementById('event').value,
-                    odds: parseFloat(oddsValue),
-                    amount: parseFloat(document.getElementById('amount').value)
-                };
+            
+            const oddsValue = document.getElementById('odds').value.replace(',', '.');
+            const betData = {
+                action: 'add',
+                match: document.getElementById('match').value,
+                event: document.getElementById('event').value,
+                odds: parseFloat(oddsValue),
+                amount: parseFloat(document.getElementById('amount').value)
+            };
+
+            // ОПТИМИСТИЧНОЕ ДОБАВЛЕНИЕ (Мгновенно показываем ставку)
+            const now = new Date();
+            const tempDate = `${String(now.getDate()).padStart(2, '0')}.${String(now.getMonth() + 1).padStart(2, '0')} ${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
+            
+            const newBet = {
+                row: Date.now(), // Временный ID
+                timestamp: Date.now(),
+                date: tempDate,
+                match: betData.match,
+                event: betData.event,
+                odds: betData.odds,
+                amount: betData.amount,
+                result: 'В процессе',
+                profit: 0
+            };
+            
+            allBets.unshift(newBet); // Добавляем в начало списка
+            currentBalanceNum -= betData.amount; // Мгновенно вычитаем из баланса
+            
+            document.getElementById('currentBalance').innerText = currentBalanceNum.toLocaleString('ru-RU') + ' ₽';
+            updateEventDatalist();
+            renderBets();
+
+            // Очищаем форму
+            document.getElementById('match').value = '';
+            document.getElementById('event').value = '';
+            document.getElementById('odds').value = '';
+
+            // Отправляем данные в фоне
             try {
-                await fetch(WEB_APP_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify(betData) });
-                document.getElementById('match').value = '';
-                document.getElementById('event').value = '';
-                document.getElementById('odds').value = '';
-                document.getElementById('amount').value = '';
-                setTimeout(refreshData, 2000);
+                fetch(WEB_APP_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify(betData) })
+                .then(() => {
+                    // Тихо синхронизируем с таблицей через 2 секунды
+                    setTimeout(() => refreshData(false), 2000);
+                });
             } catch (err) {
-                toggleLoading(false);
+                console.error("Ошибка фоновой отправки", err);
             }
         };
 
