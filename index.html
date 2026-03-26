@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Yasher System | Dashboard</title>
+    <title>Yasher System | Dashboard</title>ф
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
@@ -90,14 +90,7 @@
                             <label class="block text-[10px] font-bold text-slate-500 uppercase mb-2 ml-1">Событие</label>
                             <input type="text" id="event" list="event-options" placeholder="Тотал Б 2.5" class="w-full p-4 border border-slate-200 rounded-xl outline-none focus:border-green-500 font-bold transition-all" required>
                             <datalist id="event-options">
-                                <option value="П1">
-                                <option value="П2">
-                                <option value="Х">
-                                <option value="Тотал Б 1.5">
-                                <option value="Тотал Б 2.5">
-                                <option value="Тотал М 2.5">
-                                <option value="ОЗ - Да">
-                                <option value="ОЗ - Нет">
+                                <!-- Опции генерируются автоматически через JS -->
                             </datalist>
                         </div>
                         <div class="grid grid-cols-2 gap-4">
@@ -145,6 +138,19 @@
         let allBets = [];
         let currentTab = 'active'; // 'active' или 'history'
 
+        // Базовые события, которые всегда будут в списке
+        const defaultEvents = ["П1", "П2", "Х", "Тотал Б 1.5", "Тотал Б 2.5", "Тотал М 2.5", "ОЗ - Да", "ОЗ - Нет"];
+
+        function updateEventDatalist() {
+            const datalist = document.getElementById('event-options');
+            // Собираем все события из истории
+            const historyEvents = allBets.map(bet => bet.event).filter(Boolean);
+            // Объединяем базовые и исторические, убираем дубликаты
+            const uniqueEvents = [...new Set([...defaultEvents, ...historyEvents])];
+            // Обновляем HTML
+            datalist.innerHTML = uniqueEvents.map(ev => `<option value="${ev}">`).join('');
+        }
+
         function setTab(tab) {
             currentTab = tab;
             document.getElementById('tab-active').className = tab === 'active' 
@@ -191,6 +197,7 @@
 
                     // Сохраняем все ставки и сортируем по времени (новые сверху)
                     allBets = data.history.sort((a, b) => b.timestamp - a.timestamp);
+                    updateEventDatalist(); // Обновляем выпадающий список событий
                     renderBets();
                 } catch (parseError) {
                     console.error("Ошибка парсинга JSON:", text);
@@ -313,4 +320,3 @@
     </script>
 </body>
 </html>
- 
