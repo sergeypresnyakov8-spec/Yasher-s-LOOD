@@ -3,6 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#0f172a">
+    <link rel="manifest" href="/manifest.json">
+    <link rel="apple-touch-icon" href="/icon-192.png">
     <title>Yasher System | Dashboard</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet">
@@ -88,7 +91,7 @@
                     <div class="w-14 h-14 bg-green-600 rounded-2xl flex items-center justify-center text-white text-3xl font-black shadow-lg shrink-0">Y</div>
                     <div>
                         <h1 class="text-3xl font-black text-white tracking-tight drop-shadow-[0_0_10px_rgba(34,197,94,0.3)]">YASHER <span class="text-green-500">SYSTEM</span></h1>
-                        <p class="text-[10px] font-bold text-green-500/70 uppercase tracking-widest">Loodstvo</p>
+                        <p class="text-[10px] font-bold text-green-500/70 uppercase tracking-widest">Dashboard</p>
                     </div>
                 </div>
             </div>
@@ -400,6 +403,19 @@
         };
 
         window.onload = refreshData;
+
+        // Регистрация Service Worker для PWA
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js')
+                    .then(registration => {
+                        console.log('ServiceWorker registration successful with scope: ', registration.scope);
+                    })
+                    .catch(err => {
+                        console.log('ServiceWorker registration failed: ', err);
+                    });
+            });
+        }
     </script>
 </body>
 </html>
