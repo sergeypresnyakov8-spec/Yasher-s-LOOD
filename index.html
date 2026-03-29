@@ -6,6 +6,7 @@
     <meta name="theme-color" content="#0f172a">
     <title>Yasher System | Dashboard</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
         body { 
@@ -158,6 +159,7 @@
                         <div class="flex gap-4 sm:gap-6">
                             <button onclick="setTab('active')" id="tab-active" class="text-xs sm:text-sm font-black uppercase tracking-widest text-green-500 border-b-2 border-green-500 pb-1 transition-all drop-shadow-[0_0_5px_rgba(34,197,94,0.5)]">Активные</button>
                             <button onclick="setTab('history')" id="tab-history" class="text-xs sm:text-sm font-black uppercase tracking-widest text-slate-500 hover:text-slate-300 pb-1 transition-all border-b-2 border-transparent">История</button>
+                            <button onclick="setTab('stats')" id="tab-stats" class="text-xs sm:text-sm font-black uppercase tracking-widest text-slate-500 hover:text-slate-300 pb-1 transition-all border-b-2 border-transparent">Статистика</button>
                         </div>
                         <button onclick="refreshData()" class="p-2 text-slate-400 hover:text-green-400 transition-all bg-slate-800/50 rounded-lg border border-slate-700/50 hover:border-green-500/50">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" /></svg>
@@ -166,6 +168,10 @@
 
                     <div id="betsContainer" class="space-y-4 flex-1 overflow-y-auto custom-scroll pr-2 max-h-[600px]">
                         <!-- Контент ставок -->
+                    </div>
+                    
+                    <div id="statsContainer" class="hidden flex-1 w-full h-full min-h-[400px]">
+                        <canvas id="profitChart"></canvas>
                     </div>
                 </div>
             </div>
@@ -180,6 +186,7 @@
         let currentTab = 'active'; // 'active' или 'history'
         let currentBalanceNum = 0; // Храним баланс как число для быстрых расчетов
         let currentUser = ''; // Текущий выбранный пользователь (лист)
+        let profitChartInstance = null; // Инстанс графика
 
         // Базовые события, которые всегда будут в списке
         const defaultEvents = ["П1", "П2", "Х", "Тотал Б 1.5", "Тотал Б 2.5", "Тотал М 2.5", "ОЗ - Да", "ОЗ - Нет"];
@@ -201,8 +208,108 @@
             
             document.getElementById('tab-active').className = tab === 'active' ? activeClass : inactiveClass;
             document.getElementById('tab-history').className = tab === 'history' ? activeClass : inactiveClass;
+            document.getElementById('tab-stats').className = tab === 'stats' ? activeClass : inactiveClass;
             
-            renderBets();
+            const betsContainer = document.getElementById('betsContainer');
+            const statsContainer = document.getElementById('statsContainer');
+
+            if (tab === 'stats') {
+                betsContainer.classList.add('hidden');
+                statsContainer.classList.remove('hidden');
+                renderChart();
+            } else {
+                betsContainer.classList.remove('hidden');
+                statsContainer.classList.add('hidden');
+                renderBets();
+            }
+        }
+
+        function renderChart() {
+            const ctx = document.getElementById('profitChart').getContext('2d');
+            
+            // Получаем только завершенные ставки и сортируем их по времени (от старых к новым)
+            const finishedBets = allBets.filter(b => b.result !== 'В процессе').sort((a, b) => a.timestamp - b.timestamp);
+            
+            let cumulativeProfit = 0;
+            const labels = [];
+            const dataPoints = [];
+
+            // Начальная точка (0)
+            labels.push('Старт');
+            dataPoints.push(0);
+
+            finishedBets.forEach(bet => {
+                cumulativeProfit += (bet.profit || 0);
+                labels.push(formatDate(bet.date));
+                dataPoints.push(cumulativeProfit);
+            });
+
+            if (profitChartInstance) {
+                profitChartInstance.destroy();
+            }
+
+            // Настройка цветов в зависимости от темы
+            const isPositive = cumulativeProfit >= 0;
+            const lineColor = isPositive ? '#22c55e' : '#ef4444'; // Green or Red
+            const bgColor = isPositive ? 'rgba(34, 197, 94, 0.1)' : 'rgba(239, 68, 68, 0.1)';
+
+            profitChartInstance = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Динамика профита (₽)',
+                        data: dataPoints,
+                        borderColor: lineColor,
+                        backgroundColor: bgColor,
+                        borderWidth: 3,
+                        pointBackgroundColor: '#0f172a',
+                        pointBorderColor: lineColor,
+                        pointBorderWidth: 2,
+                        pointRadius: 4,
+                        pointHoverRadius: 6,
+                        fill: true,
+                        tension: 0.3 // Плавные изгибы
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            labels: {
+                                color: '#94a3b8',
+                                font: { family: 'Montserrat', weight: 'bold' }
+                            }
+                        },
+                        tooltip: {
+                            backgroundColor: 'rgba(15, 23, 42, 0.9)',
+                            titleColor: '#f8fafc',
+                            bodyColor: '#22c55e',
+                            titleFont: { family: 'Montserrat', weight: 'bold' },
+                            bodyFont: { family: 'Montserrat', weight: 'bold' },
+                            padding: 12,
+                            cornerRadius: 8,
+                            displayColors: false,
+                            callbacks: {
+                                label: function(context) {
+                                    return context.parsed.y + ' ₽';
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            grid: { color: 'rgba(51, 65, 85, 0.3)', drawBorder: false },
+                            ticks: { color: '#64748b', font: { family: 'Montserrat', size: 10 } }
+                        },
+                        y: {
+                            grid: { color: 'rgba(51, 65, 85, 0.3)', drawBorder: false },
+                            ticks: { color: '#64748b', font: { family: 'Montserrat', size: 10, weight: 'bold' } }
+                        }
+                    }
+                }
+            });
         }
 
         function formatDate(dateStr) {
@@ -252,7 +359,12 @@
                     // Сохраняем все ставки и сортируем по времени (новые сверху)
                     allBets = data.history.sort((a, b) => b.timestamp - a.timestamp);
                     updateEventDatalist(); // Обновляем выпадающий список событий
-                    renderBets();
+                    
+                    if (currentTab === 'stats') {
+                        renderChart();
+                    } else {
+                        renderBets();
+                    }
                 } catch (parseError) {
                     console.error("Ошибка парсинга JSON:", text);
                     if (showLoader) alert("Ошибка: Скрипт вернул неверный формат данных. Возможно, скрипт требует авторизации или произошла ошибка в коде Apps Script. Проверьте консоль.");
