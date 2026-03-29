@@ -35,17 +35,18 @@
         
         .btn-res { 
             transition: all 0.2s; 
-            padding: 8px 10px; 
-            border-radius: 10px; 
+            padding: 8px 4px; 
+            border-radius: 8px; 
             font-weight: 900; 
-            font-size: 10px; 
+            font-size: 9px; 
             color: white;
             text-transform: uppercase;
             cursor: pointer;
-            letter-spacing: 0.05em;
+            letter-spacing: 0.02em;
+            text-align: center;
         }
         @media (min-width: 640px) {
-            .btn-res { padding: 10px 16px; font-size: 11px; }
+            .btn-res { padding: 10px 16px; font-size: 11px; border-radius: 10px; letter-spacing: 0.05em; }
         }
         .btn-res:hover { transform: scale(1.05); filter: brightness(1.2); }
         .btn-res:active { transform: scale(0.95); }
@@ -67,10 +68,12 @@
         @keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
 
         /* Custom Scrollbar for history */
-        .custom-scroll::-webkit-scrollbar { width: 4px; }
+        .custom-scroll::-webkit-scrollbar { width: 4px; height: 4px; }
         .custom-scroll::-webkit-scrollbar-track { background: rgba(15, 23, 42, 0.5); border-radius: 10px; }
         .custom-scroll::-webkit-scrollbar-thumb { background: #22c55e; border-radius: 10px; }
         .custom-scroll::-webkit-scrollbar-thumb:hover { background: #16a34a; }
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
     </style>
 </head>
 <body class="p-4 md:p-8 lg:p-12 min-h-screen">
@@ -90,7 +93,7 @@
                     <div class="flex items-center gap-4">
                         <div class="w-14 h-14 bg-green-600 rounded-2xl flex items-center justify-center text-white text-3xl font-black shadow-lg shrink-0">Y</div>
                         <div>
-                            <h1 class="text-3xl font-black text-white tracking-tight drop-shadow-[0_0_10px_rgba(34,197,94,0.3)]">YASHER <span class="text-green-500">SYSTEM</span></h1>
+                            <h1 class="text-2xl sm:text-3xl font-black text-white tracking-tight drop-shadow-[0_0_10px_rgba(34,197,94,0.3)]">YASHER <span class="text-green-500">SYSTEM</span></h1>
                             <p class="text-[10px] font-bold text-green-500/70 uppercase tracking-widest">Loodstvo</p>
                         </div>
                     </div>
@@ -126,11 +129,11 @@
                     <form id="betForm" class="space-y-4">
                         <div>
                             <label class="block text-[10px] font-bold text-slate-500 uppercase mb-2 ml-1">Матч</label>
-                            <input type="text" id="match" placeholder="Челси - Бавария" class="w-full p-4 border border-slate-200 rounded-xl outline-none focus:border-green-500 font-bold transition-all" required>
+                            <input type="text" id="match" placeholder="Челси - Бавария" class="w-full p-4 text-base sm:text-sm border border-slate-200 rounded-xl outline-none focus:border-green-500 font-bold transition-all" required>
                         </div>
                         <div>
                             <label class="block text-[10px] font-bold text-slate-500 uppercase mb-2 ml-1">Событие</label>
-                            <input type="text" id="event" list="event-options" placeholder="Тотал Б 2.5" class="w-full p-4 border border-slate-200 rounded-xl outline-none focus:border-green-500 font-bold transition-all" required>
+                            <input type="text" id="event" list="event-options" placeholder="Тотал Б 2.5" class="w-full p-4 text-base sm:text-sm border border-slate-200 rounded-xl outline-none focus:border-green-500 font-bold transition-all" required>
                             <datalist id="event-options">
                                 <!-- Опции генерируются автоматически через JS -->
                             </datalist>
@@ -138,15 +141,15 @@
                         <div class="grid grid-cols-2 gap-4">
                             <div>
                                 <label class="block text-[10px] font-bold text-slate-500 uppercase mb-2 ml-1">Коэфф.</label>
-                                <input type="number" id="odds" step="0.01" placeholder="1.80" class="w-full p-4 border border-slate-200 rounded-xl outline-none focus:border-green-500 font-bold" required>
+                                <input type="number" id="odds" step="0.01" placeholder="1.80" class="w-full p-4 text-base sm:text-sm border border-slate-200 rounded-xl outline-none focus:border-green-500 font-bold" required>
                             </div>
                             <div>
                                 <label class="block text-[10px] font-bold text-slate-500 uppercase mb-2 ml-1">Сумма (₽)</label>
-                                <input type="number" id="amount" placeholder="30" class="w-full p-4 border border-slate-200 rounded-xl outline-none focus:border-green-500 font-black text-green-700" required>
+                                <input type="number" id="amount" placeholder="30" class="w-full p-4 text-base sm:text-sm border border-slate-200 rounded-xl outline-none focus:border-green-500 font-black text-green-700" required>
                             </div>
                         </div>
-                        <button type="submit" class="w-full yasher-btn text-white font-black py-5 rounded-xl uppercase text-xs tracking-widest mt-2">
-                            Сделать ставку
+                        <button type="submit" class="w-full yasher-btn text-white font-black py-5 rounded-xl uppercase text-xs tracking-widest mt-2 flex items-center justify-center gap-2 group">
+                            Сделать ставку <span class="opacity-40 group-hover:opacity-100 transition-opacity text-sm">😈</span>
                         </button>
                     </form>
                 </div>
@@ -156,12 +159,12 @@
             <div class="lg:col-span-8">
                 <div class="yasher-card p-4 sm:p-8 min-h-[500px] flex flex-col">
                     <div class="flex justify-between items-center mb-4 sm:mb-6 border-b border-slate-700/50 pb-4">
-                        <div class="flex gap-4 sm:gap-6">
-                            <button onclick="setTab('active')" id="tab-active" class="text-xs sm:text-sm font-black uppercase tracking-widest text-green-500 border-b-2 border-green-500 pb-1 transition-all drop-shadow-[0_0_5px_rgba(34,197,94,0.5)]">Активные</button>
-                            <button onclick="setTab('history')" id="tab-history" class="text-xs sm:text-sm font-black uppercase tracking-widest text-slate-500 hover:text-slate-300 pb-1 transition-all border-b-2 border-transparent">История</button>
-                            <button onclick="setTab('stats')" id="tab-stats" class="text-xs sm:text-sm font-black uppercase tracking-widest text-slate-500 hover:text-slate-300 pb-1 transition-all border-b-2 border-transparent">Статистика лудства моего</button>
+                        <div class="flex gap-4 sm:gap-6 overflow-x-auto hide-scrollbar whitespace-nowrap w-full pr-4">
+                            <button onclick="setTab('active')" id="tab-active" class="text-xs sm:text-sm font-black uppercase tracking-widest text-green-500 border-b-2 border-green-500 pb-1 transition-all drop-shadow-[0_0_5px_rgba(34,197,94,0.5)] shrink-0">Активные</button>
+                            <button onclick="setTab('history')" id="tab-history" class="text-xs sm:text-sm font-black uppercase tracking-widest text-slate-500 hover:text-slate-300 pb-1 transition-all border-b-2 border-transparent shrink-0">История</button>
+                            <button onclick="setTab('stats')" id="tab-stats" class="text-xs sm:text-sm font-black uppercase tracking-widest text-slate-500 hover:text-slate-300 pb-1 transition-all border-b-2 border-transparent shrink-0">Статистика</button>
                         </div>
-                        <button onclick="refreshData()" class="p-2 text-slate-400 hover:text-green-400 transition-all bg-slate-800/50 rounded-lg border border-slate-700/50 hover:border-green-500/50">
+                        <button onclick="refreshData()" class="p-2 text-slate-400 hover:text-green-400 transition-all bg-slate-800/50 rounded-lg border border-slate-700/50 hover:border-green-500/50 shrink-0 ml-2">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" /></svg>
                         </button>
                     </div>
@@ -203,8 +206,8 @@
 
         function setTab(tab) {
             currentTab = tab;
-            const activeClass = "text-xs sm:text-sm font-black uppercase tracking-widest text-green-500 border-b-2 border-green-500 pb-1 transition-all drop-shadow-[0_0_5px_rgba(34,197,94,0.5)]";
-            const inactiveClass = "text-xs sm:text-sm font-black uppercase tracking-widest text-slate-500 hover:text-slate-300 pb-1 transition-all border-b-2 border-transparent";
+            const activeClass = "text-xs sm:text-sm font-black uppercase tracking-widest text-green-500 border-b-2 border-green-500 pb-1 transition-all drop-shadow-[0_0_5px_rgba(34,197,94,0.5)] shrink-0";
+            const inactiveClass = "text-xs sm:text-sm font-black uppercase tracking-widest text-slate-500 hover:text-slate-300 pb-1 transition-all border-b-2 border-transparent shrink-0";
             
             document.getElementById('tab-active').className = tab === 'active' ? activeClass : inactiveClass;
             document.getElementById('tab-history').className = tab === 'history' ? activeClass : inactiveClass;
@@ -258,7 +261,7 @@
                 data: {
                     labels: labels,
                     datasets: [{
-                        label: 'Динамика моей наживы на глупых букмекерах (₽)',
+                        label: 'Динамика моей наживы (Р)',
                         data: dataPoints,
                         borderColor: lineColor,
                         backgroundColor: bgColor,
@@ -466,10 +469,10 @@
                     </div>
                     <div class="flex flex-col items-start sm:items-end gap-3 w-full sm:w-auto">
                         ${!isHistory ? `
-                        <div class="flex gap-2 w-full sm:w-auto">
-                            <button onclick="updateStatus(${item.row}, 'Выигрыш')" class="btn-res flex-1 sm:flex-none bg-green-500 shadow-lg shadow-green-100">ВЫИГРЫШ</button>
-                            <button onclick="updateStatus(${item.row}, 'Проигрыш')" class="btn-res flex-1 sm:flex-none bg-red-500 shadow-lg shadow-red-100">ПРОИГРЫШ</button>
-                            <button onclick="updateStatus(${item.row}, 'Возврат')" class="btn-res flex-1 sm:flex-none bg-slate-400">ВОЗВРАТ</button>
+                        <div class="grid grid-cols-3 gap-1 sm:flex sm:gap-2 w-full sm:w-auto mt-2 sm:mt-0">
+                            <button onclick="updateStatus(${item.row}, 'Выигрыш')" class="btn-res bg-green-500 shadow-lg shadow-green-100/10">ВЫИГРЫШ</button>
+                            <button onclick="updateStatus(${item.row}, 'Проигрыш')" class="btn-res bg-red-500 shadow-lg shadow-red-100/10">ПРОИГРЫШ</button>
+                            <button onclick="updateStatus(${item.row}, 'Возврат')" class="btn-res bg-slate-400 shadow-lg shadow-slate-100/10">ВОЗВРАТ</button>
                         </div>
                         ` : `
                         <div class="flex flex-col items-end gap-1">
