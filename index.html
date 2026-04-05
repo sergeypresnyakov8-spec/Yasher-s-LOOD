@@ -424,6 +424,41 @@
             }
         }
 
+        async function deleteBet(row) {
+            if (!confirm('Вы уверены, что хотите удалить эту запись?')) return;
+
+            // ОПТИМИСТИЧНОЕ УДАЛЕНИЕ
+            const betIndex = allBets.findIndex(b => b.row === row);
+            if (betIndex !== -1) {
+                const bet = allBets[betIndex];
+
+                // Возвращаем баланс к состоянию до совершения этой ставки
+                if (bet.result === 'В процессе' || bet.result === 'Проигрыш') {
+                    currentBalanceNum += bet.amount;
+                } else if (bet.result === 'Выигрыш') {
+                    currentBalanceNum -= (bet.profit || 0);
+                }
+                // Для 'Возврат' баланс и так вернулся к исходному состоянию
+
+                allBets.splice(betIndex, 1);
+                document.getElementById('currentBalance').innerText = currentBalanceNum.toLocaleString('ru-RU') + ' ₽';
+                renderBets();
+            }
+
+            // Отправляем запрос в фоне
+            try {
+                fetch(WEB_APP_URL, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    body: JSON.stringify({ action: 'delete', row: row, user: currentUser })
+                }).then(() => {
+                    setTimeout(() => refreshData(false), 2000);
+                });
+            } catch (err) {
+                console.error("Ошибка фонового удаления", err);
+            }
+        }
+
         function renderBets() {
             const container = document.getElementById('betsContainer');
             
@@ -469,14 +504,29 @@
                     </div>
                     <div class="flex flex-col items-start sm:items-end gap-3 w-full sm:w-auto">
                         ${!isHistory ? `
-                        <div class="grid grid-cols-3 gap-1 sm:flex sm:gap-2 w-full sm:w-auto mt-2 sm:mt-0">
-                            <button onclick="updateStatus(${item.row}, 'Выигрыш')" class="btn-res bg-green-500 shadow-lg shadow-green-100/10">ВЫИГРЫШ</button>
-                            <button onclick="updateStatus(${item.row}, 'Проигрыш')" class="btn-res bg-red-500 shadow-lg shadow-red-100/10">ПРОИГРЫШ</button>
-                            <button onclick="updateStatus(${item.row}, 'Возврат')" class="btn-res bg-slate-400 shadow-lg shadow-slate-100/10">ВОЗВРАТ</button>
+                        <div class="flex flex-col items-end gap-2">
+                            <div class="grid grid-cols-3 gap-1 sm:flex sm:gap-2 w-full sm:w-auto mt-2 sm:mt-0">
+                                <button onclick="updateStatus(${item.row}, 'Выигрыш')" class="btn-res bg-green-500 shadow-lg shadow-green-100/10">ВЫИГРЫШ</button>
+                                <button onclick="updateStatus(${item.row}, 'Проигрыш')" class="btn-res bg-red-500 shadow-lg shadow-red-100/10">ПРОИГРЫШ</button>
+                                <button onclick="updateStatus(${item.row}, 'Возврат')" class="btn-res bg-slate-400 shadow-lg shadow-slate-100/10">ВОЗВРАТ</button>
+                            </div>
+                            <button onclick="deleteBet(${item.row})" class="text-[9px] font-bold text-slate-500 hover:text-red-500 transition-colors flex items-center gap-1 uppercase mr-1 opacity-50 hover:opacity-100">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                </svg>
+                                Удалить запись
+                            </button>
                         </div>
                         ` : `
                         <div class="flex flex-col items-end gap-1">
-                            ${resultBadge}
+                            <div class="flex items-center gap-2">
+                                <button onclick="deleteBet(${item.row})" class="p-1.5 text-slate-500 hover:text-red-500 transition-colors" title="Удалить">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                    </svg>
+                                </button>
+                                ${resultBadge}
+                            </div>
                             <div class="mt-1 text-sm">${profitText}</div>
                         </div>
                         `}
